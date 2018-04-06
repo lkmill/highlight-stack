@@ -5,13 +5,13 @@
  * @module midwest/util/colorize-stack
  */
 
-'use strict';
+'use strict'
 
 // modules > native
-const p = require('path');
+const p = require('path')
 
 // modules > 3rd party
-const chalk = require('chalk');
+const chalk = require('chalk')
 
 /*
  * Colorizes a stack trace.
@@ -24,26 +24,26 @@ module.exports = function (stack, html) {
   // eslint-disable-next-line no-useless-escape
   return stack && stack.replace(/\/[\/\w.-]+/g, (match) => {
     if (match.indexOf('node_modules') > -1) {
-      return match;
+      return match
     }
 
-    const dir = p.dirname(process.cwd());
-    const index = match.indexOf(dir);
+    const dir = p.dirname(process.cwd())
+    const index = match.indexOf(dir)
 
     if (index > -1) {
-      const endIndex = index + dir.length;
+      const endIndex = index + dir.length
 
       if (html) {
-        return match.slice(0, endIndex) + match.slice(endIndex).bold();
+        return match.slice(0, endIndex) + match.slice(endIndex).bold()
       }
 
-      return match.slice(0, endIndex) + chalk.yellow(match.slice(endIndex));
+      return match.slice(0, endIndex) + chalk.yellow(match.slice(endIndex))
     }
 
     if (html) {
-      return match.bold();
+      return match.bold()
     }
 
-    return chalk.yellow(match);
-  });
-};
+    return chalk.yellow(match)
+  })
+}
