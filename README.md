@@ -1,2 +1,3 @@
-# colorize-stack
-highlights the name of local (not in node_modules) files in error stack
+# Highlight Stack
+
+highlights the name of local (not in node\_modules) files in error stack

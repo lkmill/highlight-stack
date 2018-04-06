@@ -1,5 +1,5 @@
 {
-  "name": "colorize-stack",
+  "name": "@bmp/highlight-stack",
   "version": "0.0.1",
   "description": "highlights the name of local (not in node_modules) files in error stack",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lohfu/colorize-stack.git"
+    "url": "git+https://github.com/lohfu/highlight-stack.git"
   },
   "author": "Linus Miller <lohfu@lohfu.io> (https://lohfu.io/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lohfu/colorize-stack/issues"
+    "url": "https://github.com/lohfu/highlight-stack/issues"
   },
-  "homepage": "https://github.com/lohfu/colorize-stack#readme",
+  "homepage": "https://github.com/lohfu/highlight-stack#readme",
   "dependencies": {
     "chalk": "^2.3.2"
   },
