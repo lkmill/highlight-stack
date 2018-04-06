@@ -1,6 +1,6 @@
 {
   "name": "@bmp/highlight-stack",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "highlights the name of local (not in node_modules) files in error stack",
   "main": "index.js",
   "scripts": {
