@@ -7,9 +7,6 @@
 
 'use strict'
 
-// modules > native
-const p = require('path')
-
 // modules > 3rd party
 const chalk = require('chalk')
 
@@ -21,29 +18,35 @@ const chalk = require('chalk')
  * @returns A colored string of the stack trace
  */
 module.exports = function (stack, html) {
-  // eslint-disable-next-line no-useless-escape
-  return stack && stack.replace(/\/[\/\w.-]+/g, (match) => {
-    if (match.indexOf('node_modules') > -1) {
-      return match
-    }
+  const cwd = process.cwd() + '/'
 
-    const dir = p.dirname(process.cwd())
-    const index = match.indexOf(dir)
+  const regexpNodeModules = new RegExp(`node_modules/([^:]+):(\\d+):(\\d+)`)
+  const regexpLocal = new RegExp(`${cwd}([^:]+):(\\d+):(\\d+)`)
 
-    if (index > -1) {
-      const endIndex = index + dir.length
-
-      if (html) {
-        return match.slice(0, endIndex) + match.slice(endIndex).bold()
+  return stack && stack
+    .split('\n')
+    .map(line => {
+      if (line.includes('(internal/')) {
+        return chalk.grey(line)
       }
 
-      return match.slice(0, endIndex) + chalk.yellow(match.slice(endIndex))
-    }
+      if (line.includes('node_modules')) {
+        return line.replace(regexpNodeModules, (_, file, line, column) => {
+          if (html) {
+            return `${cwd}/${file.bold}:${line}:${column}`
+          }
 
-    if (html) {
-      return match.bold()
-    }
+          return `${chalk.grey('node_modules/')}${chalk.blue(file)}:${chalk.blue.bold(line)}:${chalk.blue(column)}`
+        })
+      }
 
-    return chalk.yellow(match)
-  })
+      return line.replace(regexpLocal, (_, file, line, column) => {
+        if (html) {
+          return `${cwd}/${file.bold}:${line}:${column}`
+        }
+
+        return `${chalk.grey(cwd)}${chalk.yellow(file)}:${chalk.yellow.bold(line)}:${chalk.yellow(column)}`
+      })
+    }).join('\n')
+  // eslint-disable-next-line no-useless-escape
 }
