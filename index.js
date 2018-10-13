@@ -1,52 +1,46 @@
-/*
- * Handy little util function that highlights all files in the stack trace not
- * in the node_modules/ folder.
- *
- * @module midwest/util/colorize-stack
- */
-
 'use strict'
 
 // modules > 3rd party
 const chalk = require('chalk')
 
+// constants
+const CWD = process.cwd() + '/'
+const NODE_MODULES = 'node_modules/'
+const INTERNAL = '(internal/'
+const REGEX = new RegExp(`${CWD}([^:]+):(\\d+):(\\d+)`)
+const REGEX_NODE_MODULES = /((?:@[^/]*\/)?[^/]*)([^:]*)/
+
 /*
- * Colorizes a stack trace.
+ * Highlights a stack trace.
  *
  * {String} - String
  *
  * @returns A colored string of the stack trace
  */
-module.exports = function (stack, html) {
-  const cwd = process.cwd() + '/'
-
-  const regexpNodeModules = new RegExp(`node_modules/([^:]+):(\\d+):(\\d+)`)
-  const regexpLocal = new RegExp(`${cwd}([^:]+):(\\d+):(\\d+)`)
-
+module.exports = function highlightStack (stack, { keepCWD, html } = {}) {
   return stack && stack
     .split('\n')
     .map(line => {
-      if (line.includes('(internal/')) {
+      if (line.includes(INTERNAL)) {
         return chalk.grey(line)
       }
 
-      if (line.includes('node_modules')) {
-        return line.replace(regexpNodeModules, (_, file, line, column) => {
+      return line.replace(REGEX, (_, path, line, column) => {
+        if (path.includes(NODE_MODULES)) {
+          const [ , module, file ] = path.slice(NODE_MODULES.length).match(REGEX_NODE_MODULES)
+
           if (html) {
-            return `${cwd}/${file.bold}:${line}:${column}`
+            return `${keepCWD ? CWD + NODE_MODULES : ''}${path.slice(module).bold()}${file}:${line}:${column}`
           }
 
-          return `${chalk.grey('node_modules/')}${chalk.blue(file)}:${chalk.blue.bold(line)}:${chalk.blue(column)}`
-        })
-      }
-
-      return line.replace(regexpLocal, (_, file, line, column) => {
-        if (html) {
-          return `${cwd}/${file.bold}:${line}:${column}`
+          return `${chalk.grey(keepCWD ? CWD + NODE_MODULES : '')}${chalk.blue(module)}${chalk.grey(file)}:${chalk.grey.bold(line)}:${chalk.grey(column)}`
         }
 
-        return `${chalk.grey(cwd)}${chalk.yellow(file)}:${chalk.yellow.bold(line)}:${chalk.yellow(column)}`
+        if (html) {
+          return `${keepCWD ? CWD : ''}${path.bold()}:${line}:${column}`
+        }
+
+        return `${chalk.grey(keepCWD ? CWD : '')}${chalk.yellow(path)}:${chalk.yellow.bold(line)}:${chalk.yellow(column)}`
       })
     }).join('\n')
-  // eslint-disable-next-line no-useless-escape
 }
