@@ -6,7 +6,11 @@ const chalk = require('chalk')
 // constants
 const CWD = process.cwd() + '/'
 const NODE_MODULES = 'node_modules/'
-const INTERNAL = '(internal/'
+const INTERNAL = [
+  '(internal/',
+  '(events.js',
+  '(_stream',
+]
 const REGEX = new RegExp(`${CWD}([^:]+):(\\d+):(\\d+)`)
 const REGEX_NODE_MODULES = /((?:@[^/]*\/)?[^/]*)([^:]*)/
 
@@ -21,7 +25,7 @@ module.exports = function highlightStack (stack, { keepCWD, html } = {}) {
   return stack && stack
     .split('\n')
     .map(line => {
-      if (line.includes(INTERNAL)) {
+      if (INTERNAL.some(str => line.includes(str))) {
         return chalk.grey(line)
       }
 
