@@ -7,9 +7,10 @@ const chalk = require('chalk')
 const CWD = process.cwd() + '/'
 const NODE_MODULES = 'node_modules/'
 const INTERNAL = [
-  '(internal/',
-  '(events.js',
   '(_stream',
+  '(events.js',
+  '(internal/',
+  '(vm.js',
 ]
 const REGEX = new RegExp(`${CWD}([^:]+):(\\d+):(\\d+)`)
 const REGEX_NODE_MODULES = /((?:@[^/]*\/)?[^/]*)([^:]*)/
