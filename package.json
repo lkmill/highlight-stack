@@ -2,10 +2,15 @@
   "name": "@bmp/highlight-stack",
   "version": "0.1.2",
   "description": "highlights the name of local (not in node_modules) files in error stack",
-  "main": "index.js",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint ."
+    "build": "tsc",
+    "clean": "rimraf ./*.js ./*.ts",
+    "lint": "eslint --ext ts src",
+    "prepublish": "npm run lint",
+    "preversion": "npm run lint",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -21,11 +26,15 @@
     "chalk": "^2.4.1"
   },
   "devDependencies": {
+    "@types/node": "^12.6.8",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
     "eslint": "^6.1.0",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^9.1.0",
     "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "eslint-plugin-standard": "^4.0.0",
+    "typescript": "^3.5.3"
   }
 }
