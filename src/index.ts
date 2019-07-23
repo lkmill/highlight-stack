@@ -1,7 +1,5 @@
-'use strict'
-
 // modules > 3rd party
-const chalk = require('chalk')
+import chalk from 'chalk'
 
 // constants
 const CWD = process.cwd() + '/'
@@ -22,23 +20,27 @@ const REGEX_NODE_MODULES = /((?:@[^/]*\/)?[^/]*)([^:]*)/
  *
  * @returns A colored string of the stack trace
  */
-module.exports = function highlightStack (stack, { keepCWD, html } = {}) {
+export default function highlightStack (stack: string, { keepCWD, html }: { keepCWD?: boolean, html?: boolean } = {}) {
   return stack && stack
     .split('\n')
-    .map(line => {
+    .map((line: string) => {
       if (INTERNAL.some(str => line.includes(str))) {
         return chalk.grey(line)
       }
 
-      return line.replace(REGEX, (_, path, line, column) => {
+      return line.replace(REGEX, (_, path: string, line: string, column: string) => {
         if (path.includes(NODE_MODULES)) {
-          const [ , module, file ] = path.slice(NODE_MODULES.length).match(REGEX_NODE_MODULES)
+          const result = path.slice(NODE_MODULES.length).match(REGEX_NODE_MODULES)
 
-          if (html) {
-            return `${keepCWD ? CWD + NODE_MODULES : ''}${path.slice(module).bold()}${file}:${line}:${column}`
+          if (result) {
+            const [, module, file] = result
+
+            if (html) {
+              return `${keepCWD ? CWD + NODE_MODULES : ''}${path.slice(parseInt(module, 10)).bold()}${file}:${line}:${column}`
+            }
+
+            return `${chalk.grey(keepCWD ? CWD + NODE_MODULES : '')}${chalk.blue(module)}${chalk.grey(file)}:${chalk.grey.bold(line)}:${chalk.grey(column)}`
           }
-
-          return `${chalk.grey(keepCWD ? CWD + NODE_MODULES : '')}${chalk.blue(module)}${chalk.grey(file)}:${chalk.grey.bold(line)}:${chalk.grey(column)}`
         }
 
         if (html) {
