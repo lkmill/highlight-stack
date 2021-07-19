@@ -2,15 +2,22 @@
   "name": "highlight-stack",
   "version": "0.2.1",
   "description": "highlights the name of local (not in node_modules) files in error stack",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "exports": {
+    "import": "./dist/index.js",
+    "require": "./dist/index.cjs"
+  },
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "clean": "rimraf ./*.js ./*.ts",
+    "build": "npm run build:cjs && npm run build:esm && npm run build:types",
+    "build:cjs": "BABEL_ENV=cjs babel src --out-dir dist --out-file-extension .cjs",
+    "build:esm": "BABEL_ENV=esm babel src --out-dir dist",
+    "build:types": "tsc",
+    "clean": "rimraf dist",
     "format": "prettier --write .",
-    "lint": "eslint --ext ts src",
-    "prepublish": "npm run lint",
-    "preversion": "npm run lint",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run lint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -28,9 +35,10 @@
     "prettier": "^2.3.2"
   },
   "devDependencies": {
-    "@types/node": "^16.3.3",
-    "@typescript-eslint/eslint-plugin": "^4.28.3",
-    "@typescript-eslint/parser": "^4.28.3",
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "babel-plugin-transform-es2015-modules-simple-commonjs": "^0.3.0",
     "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",

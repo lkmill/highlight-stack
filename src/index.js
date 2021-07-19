@@ -8,24 +8,25 @@ const INTERNAL = ['(_stream', '(events.js', '(internal/', '(vm.js']
 const REGEX = new RegExp(`${CWD}([^:]+):(\\d+):(\\d+)`)
 const REGEX_NODE_MODULES = /((?:@[^/]*\/)?[^/]*)([^:]*)/
 
-/*
+/**
  * Highlights a stack trace.
  *
- * {String} - String
+ * @param {string} stack - the stack to highlight files in
+ * @param {{ keepCWD?: boolean, html?: boolean }} [options]
  *
- * @returns A colored string of the stack trace
+ * @returns {string} A colored string of the stack trace
  */
-export default function highlightStack(stack: string, { keepCWD, html }: { keepCWD?: boolean; html?: boolean } = {}) {
+export default function highlightStack(stack, { keepCWD, html } = {}) {
   return (
     stack &&
     stack
       .split('\n')
-      .map((line: string) => {
+      .map((line) => {
         if (INTERNAL.some((str) => line.includes(str))) {
           return chalk.grey(line)
         }
 
-        return line.replace(REGEX, (_, path: string, line: string, column: string) => {
+        return line.replace(REGEX, (_, path, line, column) => {
           if (path.includes(NODE_MODULES)) {
             const result = path.slice(NODE_MODULES.length).match(REGEX_NODE_MODULES)
 
