@@ -3,7 +3,7 @@
 A module to make it easier for humans to read logged stack traces in node.
 
 This module will remove the current working directory from all paths, highlight
-local file paths and node\_modules' names and fade all lines referring to node
+local file paths and node_modules' names and fade all lines referring to node
 internals.
 
 ## Installation
@@ -44,4 +44,3 @@ process.on('uncaughtException', (err) => {
   process.exit(1)
 })
 ```
-

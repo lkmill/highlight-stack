@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf ./*.js ./*.ts",
+    "format": "prettier --write .",
     "lint": "eslint --ext ts src",
     "prepublish": "npm run lint",
     "preversion": "npm run lint",
@@ -23,13 +24,15 @@
   },
   "homepage": "https://github.com/lohfu/highlight-stack#readme",
   "dependencies": {
-    "chalk": "^4.1.1"
+    "chalk": "^4.1.1",
+    "prettier": "^2.3.2"
   },
   "devDependencies": {
     "@types/node": "^16.3.3",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
     "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-node": "^11.1.0",
