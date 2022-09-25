@@ -3,37 +3,52 @@
 A module to make it easier for humans to read logged stack traces in node.
 
 This module will remove the current working directory from all paths, highlight
-local file paths and node_modules' names and fade all lines referring to node
+local file paths and node\_modules' names and fade all lines referring to node
 internals.
 
 ## Installation
 
 ```
-$ npm install @bmp/highlight-stack
+$ npm install highlight-stack
 ```
 
 ## Usage
 
+Builds both CJS and ESM versions.
+
+```js
+import highlightStack from 'highlight-stack')
+// or
+const highlightStack = require('highlight-stack')
+```
+
 General
 
-```
+```js
 try {
   doDodgyStuff()
-} catch (e) {
-  console.error( `[${e.name}] ${e.message}`)
-
-  if (error.stack) {
-    console.error(highlightStack(e.stack.slice(e.stack.indexOf('\n') + 1)).trim())
-  }
+} catch (err) {
+  console.error(highlightStack(err.stack))
 }
 ```
 
-To make uncaught exceptions easier to read:
+To make uncaught exceptions unhandled rejections easier to read:
 
-```
-const hightlightStack = require('@bmp/highlight-stack')
+```js
 process.on('uncaughtException', (err) => {
   console.error(chalk.red('UNCAUGHT EXCEPTION'))
+
+  if (err.stack) {
+    console.error(highlightStack(err.stack))
+  } else {
+    console.error(err)
+  }
+
+  process.exit(1)
+})
+
+process.on('unhandledRejection', (err) => {
+  console.error(chalk.red('UNHANDLED REJECTION'))
 
   if (err.stack) {
     console.error(highlightStack(err.stack))
